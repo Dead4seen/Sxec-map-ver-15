@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e73f71504dc100426747a2c096e11545 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.1.2/dist/leaflet-ant-path.min.js"></script>
+</head>
+<body>
+    
+    
+     <div style="position: fixed; bottom: 30px; left: 30px; width: 360px; border:2px solid grey; z-index:9999; font-size:14px; background-color:rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 10px;">
+     <b>SXEC Distribution Network V15</b><hr style="margin: 5px 0;">
+     <b>Infrastructure & Partners (Click for info):</b><br>
+     <i class="fa fa-ship" style="color:darkblue"></i> Inbound Port   
+     <i class="fa fa-industry" style="color:darkred"></i> Factory   
+     <i class="fa fa-cogs" style="color:blue"></i> Hybrid Hub   
+     <i class="fa fa-plane-departure" style="color:cadetblue"></i> Airport<br>
+     <i class="fa fa-link" style="color:green"></i> VAR/Distributor   
+     <i class="fa fa-project-diagram" style="color:purple"></i> System Integrator<br>
+     <i class="fa fa-university" style="color:orange"></i> Customer (Bank)   
+     <i class="fa fa-landmark" style="color:black"></i> Customer (Gov)<br>
+     <i class="fa fa-briefcase" style="color:lightblue"></i> End-Customer (from VAR)<br>
+     <hr style="margin: 5px 0;">
+     <b>Logistics & Transportation Flows:</b><br>
+     <span style="background-color:#003366;display:inline-block;width:20px;height:7px;vertical-align:middle;"></span> <b>Animated:</b> Secure FTL Truck (Backbone)<br>
+     <span style="background-color:#d45113;display:inline-block;width:20px;height:4px;vertical-align:middle;"></span> <b>Animated:</b> Secure Van (Southern Direct)<br>
+     <span style="background-color:#0099cc;display:inline-block;width:20px;height:4px;vertical-align:middle;"></span> <b>Animated:</b> Secure Van (Regional Hub)<br>
+     <span style="border-bottom: 3px dashed #8A2BE2;display:inline-block;width:20px;vertical-align:middle;"></span> Priority Air Freight<br>
+     <span style="border-bottom: 3px solid red;display:inline-block;width:20px;vertical-align:middle;"></span> <b>Animated:</b> High-Security Ground Route<br>
+     <span style="border-bottom: 3px solid #228B22;display:inline-block;width:20px;vertical-align:middle;"></span> <b>Animated:</b> VAR to End-Customer<br>
+     </div>
+     
+    
+            <div class="folium-map" id="map_e73f71504dc100426747a2c096e11545" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e73f71504dc100426747a2c096e11545 = L.map(
+                "map_e73f71504dc100426747a2c096e11545",
+                {
+                    center: [16.0544, 108.2022],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b4f978b6108ea602b124d22c043271c7 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "SXEC Distribution Network - V15",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_b4f978b6108ea602b124d22c043271c7.addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var marker_6f937fc157239ca2dd43eeb0dd4f943b = L.marker(
+                [10.755, 106.7709],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_937dea19b31e24b03d0f59f87831d8cf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkblue",
+  "iconColor": "white",
+  "icon": "ship",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_88815ad28e6532285cd0081c90d4200d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_bab12d5cbfecb300c23c00797d220ce5 = $(`<div id="html_bab12d5cbfecb300c23c00797d220ce5" style="width: 100.0%; height: 100.0%;"><h4><b>⚓️ Inbound Gateway: Cat Lai Port</b></h4><b>Location:</b> Nguyen Thi Dinh St, Cat Lai Ward, Thu Duc City, HCMC.<br><b>Role:</b> Main entry point for imported components. The start of the physical value chain, crucial for production timeline.</div>`)[0];
+                popup_88815ad28e6532285cd0081c90d4200d.setContent(html_bab12d5cbfecb300c23c00797d220ce5);
+            
+        
+
+        marker_6f937fc157239ca2dd43eeb0dd4f943b.bindPopup(popup_88815ad28e6532285cd0081c90d4200d)
+        ;
+
+        
+    
+    
+            marker_6f937fc157239ca2dd43eeb0dd4f943b.bindTooltip(
+                `<div>
+                     Cat Lai Port
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6f937fc157239ca2dd43eeb0dd4f943b.setIcon(icon_937dea19b31e24b03d0f59f87831d8cf);
+            
+    
+            var marker_fac4e972da260bf031aa5ea25d7cc7e6 = L.marker(
+                [10.8533, 106.7725],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_ec3bf6a4512e96e12d2e5ee121d2741e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "industry",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9064da88568fae1146ab851e784a0e3b = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_606bfb8a71e564546173c2dad2155ab7 = $(`<div id="html_606bfb8a71e564546173c2dad2155ab7" style="width: 100.0%; height: 100.0%;"><h4><b>🏭 SXEC National Manufacturing Plant</b></h4><b>Location:</b> Saigon Hi-Tech Park, Thu Duc City, HCMC.<br><b>Function:</b> Primary R&D, production, QA hub.<br><b>ESG Link:</b> Rooftop solar panel installation (Phase 1) and rainwater harvesting system to reduce carbon footprint.</div>`)[0];
+                popup_9064da88568fae1146ab851e784a0e3b.setContent(html_606bfb8a71e564546173c2dad2155ab7);
+            
+        
+
+        marker_fac4e972da260bf031aa5ea25d7cc7e6.bindPopup(popup_9064da88568fae1146ab851e784a0e3b)
+        ;
+
+        
+    
+    
+            marker_fac4e972da260bf031aa5ea25d7cc7e6.bindTooltip(
+                `<div>
+                     SXEC National Manufacturing Plant (SHTP)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fac4e972da260bf031aa5ea25d7cc7e6.setIcon(icon_ec3bf6a4512e96e12d2e5ee121d2741e);
+            
+    
+            var marker_c3391ca0bb644df8c67d73b88785ad36 = L.marker(
+                [16.1042, 108.1132],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_a4d0dd30ad79537c705cfd97df1c9b49 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "cogs",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0a7a6b52829e5e64784992ed59fd732d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_29ce527fc59e8778699307111147656b = $(`<div id="html_29ce527fc59e8778699307111147656b" style="width: 100.0%; height: 100.0%;"><h4><b>💡 SXEC Central Region Hybrid Center</b></h4><b>Hybrid Center = Logistics Hub + Solutions Showroom</b><br><b>Location:</b> Da Nang Hi-Tech Park (DHTP).<br><b>Strategic Rationale:</b> A strategic beachhead to serve Central Vietnam & the Central Highlands. Its location in DHTP facilitates collaboration with other tech companies (e.g., FPT) and its logistics capabilities are key to penetrating the regional hospitality and tourism sectors.<br><b>ESG Link:</b> EV charging stations for last-mile fleet, smart energy management system.</div>`)[0];
+                popup_0a7a6b52829e5e64784992ed59fd732d.setContent(html_29ce527fc59e8778699307111147656b);
+            
+        
+
+        marker_c3391ca0bb644df8c67d73b88785ad36.bindPopup(popup_0a7a6b52829e5e64784992ed59fd732d)
+        ;
+
+        
+    
+    
+            marker_c3391ca0bb644df8c67d73b88785ad36.bindTooltip(
+                `<div>
+                     SXEC Central Hybrid Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c3391ca0bb644df8c67d73b88785ad36.setIcon(icon_a4d0dd30ad79537c705cfd97df1c9b49);
+            
+    
+            var marker_67ae8a02db8be16aec4ce249272f0dc0 = L.marker(
+                [21.015, 105.5252],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_2e3309caedded6627ab96f1762b88cf8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "cogs",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9dd87507ece3d488fab72ed498285c55 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_d540eaaccee7fefef2f684329085c6a1 = $(`<div id="html_d540eaaccee7fefef2f684329085c6a1" style="width: 100.0%; height: 100.0%;"><h4><b>💡 SXEC Northern Region Hybrid Center</b></h4><b>Hybrid Center = Logistics Hub + Solutions Showroom</b><br><b>Location:</b> Hoa Lac Hi-Tech Park (HHTP), Hanoi.<br><b>Strategic Rationale:</b> The nerve center for the Northern market. Proximity to government HQs and major corporate HQs is critical for B2G/B2B relationship building and project bidding.<br><b>ESG Link:</b> Waste sorting & recycling program for packaging, dedicated EV charging infrastructure.</div>`)[0];
+                popup_9dd87507ece3d488fab72ed498285c55.setContent(html_d540eaaccee7fefef2f684329085c6a1);
+            
+        
+
+        marker_67ae8a02db8be16aec4ce249272f0dc0.bindPopup(popup_9dd87507ece3d488fab72ed498285c55)
+        ;
+
+        
+    
+    
+            marker_67ae8a02db8be16aec4ce249272f0dc0.bindTooltip(
+                `<div>
+                     SXEC Northern Hybrid Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_67ae8a02db8be16aec4ce249272f0dc0.setIcon(icon_2e3309caedded6627ab96f1762b88cf8);
+            
+    
+            var marker_03276002cfa099995cfa0e93426ae013 = L.marker(
+                [10.8188, 106.6575],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_65a05acb78139f19a581279c9dd3d42c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "cadetblue",
+  "iconColor": "white",
+  "icon": "plane-departure",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7d264f4124c659676c3ec9e7461d57ab = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_4e21e8dba6b4661bf8a86676b5008716 = $(`<div id="html_4e21e8dba6b4661bf8a86676b5008716" style="width: 100.0%; height: 100.0%;"><h4><b>Tan Son Nhat Airport (SGN)</b></h4></div>`)[0];
+                popup_7d264f4124c659676c3ec9e7461d57ab.setContent(html_4e21e8dba6b4661bf8a86676b5008716);
+            
+        
+
+        marker_03276002cfa099995cfa0e93426ae013.bindPopup(popup_7d264f4124c659676c3ec9e7461d57ab)
+        ;
+
+        
+    
+    
+            marker_03276002cfa099995cfa0e93426ae013.bindTooltip(
+                `<div>
+                     Tan Son Nhat Airport (SGN)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_03276002cfa099995cfa0e93426ae013.setIcon(icon_65a05acb78139f19a581279c9dd3d42c);
+            
+    
+            var marker_bf58136903092f1c9d23903b5ac66740 = L.marker(
+                [21.2185, 105.8043],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_f8e7c3fe38fc8352399b3a42ddefd0fa = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "cadetblue",
+  "iconColor": "white",
+  "icon": "plane-departure",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8c86338fb272a05473810dff93669056 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_96a3e6192e49cd089ac9f8a181e4545a = $(`<div id="html_96a3e6192e49cd089ac9f8a181e4545a" style="width: 100.0%; height: 100.0%;"><h4><b>Noi Bai Airport (HAN)</b></h4></div>`)[0];
+                popup_8c86338fb272a05473810dff93669056.setContent(html_96a3e6192e49cd089ac9f8a181e4545a);
+            
+        
+
+        marker_bf58136903092f1c9d23903b5ac66740.bindPopup(popup_8c86338fb272a05473810dff93669056)
+        ;
+
+        
+    
+    
+            marker_bf58136903092f1c9d23903b5ac66740.bindTooltip(
+                `<div>
+                     Noi Bai Airport (HAN)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_bf58136903092f1c9d23903b5ac66740.setIcon(icon_f8e7c3fe38fc8352399b3a42ddefd0fa);
+            
+    
+            var marker_10ef5bc049a4faae84bf4fe79b299074 = L.marker(
+                [10.7761, 106.7032],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_d8520e4015842ed51bc3c359bdf917a6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "project-diagram",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_211d39ae79e9b024c00fa0963117963e = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_f91696f264a6c82928df81c49c21eb68 = $(`<div id="html_f91696f264a6c82928df81c49c21eb68" style="width: 100.0%; height: 100.0%;"><h4><b>🚢 3PL Partner: GEMADEPT</b></h4><b>Location:</b> 6 Le Thanh Ton, Dist 1, HCMC.<br><b>Role:</b> Strategic 3PL partner for the secure backbone FTL route, providing professional, high-security freight services and real-time tracking capabilities.</div>`)[0];
+                popup_211d39ae79e9b024c00fa0963117963e.setContent(html_f91696f264a6c82928df81c49c21eb68);
+            
+        
+
+        marker_10ef5bc049a4faae84bf4fe79b299074.bindPopup(popup_211d39ae79e9b024c00fa0963117963e)
+        ;
+
+        
+    
+    
+            marker_10ef5bc049a4faae84bf4fe79b299074.bindTooltip(
+                `<div>
+                     3PL Partner: GEMADEPT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_10ef5bc049a4faae84bf4fe79b299074.setIcon(icon_d8520e4015842ed51bc3c359bdf917a6);
+            
+    
+            var marker_2f2ae5aa8f9a6909479fe50a11eadcc9 = L.marker(
+                [10.8931, 106.7565],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_c5f1cbae3df5a18afee145d4bdf73d33 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "link",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5a1e0268dbea520335cc2faac77d529f = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6d27b75fedccfef4f7067d9ca76860be = $(`<div id="html_6d27b75fedccfef4f7067d9ca76860be" style="width: 100.0%; height: 100.0%;"><h4><b>🤝 VAR Partner: Synnex FPT</b></h4><b>Location:</b> Song Than 1 IP, Binh Duong.<br><b>Role:</b> Vietnam's largest ICT distributor. A key channel to reach thousands of smaller B2B customers and resellers across the South. Receives bulk shipments from SHTP.</div>`)[0];
+                popup_5a1e0268dbea520335cc2faac77d529f.setContent(html_6d27b75fedccfef4f7067d9ca76860be);
+            
+        
+
+        marker_2f2ae5aa8f9a6909479fe50a11eadcc9.bindPopup(popup_5a1e0268dbea520335cc2faac77d529f)
+        ;
+
+        
+    
+    
+            marker_2f2ae5aa8f9a6909479fe50a11eadcc9.bindTooltip(
+                `<div>
+                     VAR: Synnex FPT Distribution Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2f2ae5aa8f9a6909479fe50a11eadcc9.setIcon(icon_c5f1cbae3df5a18afee145d4bdf73d33);
+            
+    
+            var marker_765802a83b7f7c7e3a38896d549d56c0 = L.marker(
+                [10.9328, 106.697],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_89f60961325c7d3ac8060e86d50d33b1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightblue",
+  "iconColor": "white",
+  "icon": "briefcase",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5f8524c0476b7bbfe21055a55f3a5479 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_dab4638f211e5009118c98e57517eba2 = $(`<div id="html_dab4638f211e5009118c98e57517eba2" style="width: 100.0%; height: 100.0%;"><h4><b>🏢 End-Customer (from VAR)</b></h4><b>Location:</b> Vietnam Singapore Industrial Park 1, Binh Duong.<br><b>Served by:</b> Synnex FPT and its reseller network.<br><b>Solution Example:</b> Time attendance and access control systems for factories.</div>`)[0];
+                popup_5f8524c0476b7bbfe21055a55f3a5479.setContent(html_dab4638f211e5009118c98e57517eba2);
+            
+        
+
+        marker_765802a83b7f7c7e3a38896d549d56c0.bindPopup(popup_5f8524c0476b7bbfe21055a55f3a5479)
+        ;
+
+        
+    
+    
+            marker_765802a83b7f7c7e3a38896d549d56c0.bindTooltip(
+                `<div>
+                     End-Customer: VSIP 1 Industrial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_765802a83b7f7c7e3a38896d549d56c0.setIcon(icon_89f60961325c7d3ac8060e86d50d33b1);
+            
+    
+            var marker_86dab2cf5b06fef7a709befd4ecdee49 = L.marker(
+                [10.7717, 106.7042],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_1f6b13875dd20b760a37a010ca8707d6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightblue",
+  "iconColor": "white",
+  "icon": "briefcase",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ed87c1c91a6a756293a9c3318676e042 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_b83234d4c762a53f6b383a14c2a409e7 = $(`<div id="html_b83234d4c762a53f6b383a14c2a409e7" style="width: 100.0%; height: 100.0%;"><h4><b>🏢 End-Customer (from VAR)</b></h4><b>Location:</b> 2 Hai Trieu, Ben Nghe, Dist 1, HCMC.<br><b>Served by:</b> Synnex FPT and its reseller network.<br><b>Solution Example:</b> Integrated security solutions for corporate tenants.</div>`)[0];
+                popup_ed87c1c91a6a756293a9c3318676e042.setContent(html_b83234d4c762a53f6b383a14c2a409e7);
+            
+        
+
+        marker_86dab2cf5b06fef7a709befd4ecdee49.bindPopup(popup_ed87c1c91a6a756293a9c3318676e042)
+        ;
+
+        
+    
+    
+            marker_86dab2cf5b06fef7a709befd4ecdee49.bindTooltip(
+                `<div>
+                     End-Customer: Bitexco Financial Tower
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_86dab2cf5b06fef7a709befd4ecdee49.setIcon(icon_1f6b13875dd20b760a37a010ca8707d6);
+            
+    
+            var marker_0b46929fa14b1f3583a0022c9ec9802a = L.marker(
+                [10.7744, 106.7053],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_db16952bed5aac918b7e06e5d9aa576e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "university",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_22389b277a1611ed78339291c5bb46c5 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_3a228dbb62188dc00f933590416a0e91 = $(`<div id="html_3a228dbb62188dc00f933590416a0e91" style="width: 100.0%; height: 100.0%;"><h4><b>🏦 B2B Customer: Vietcombank HQ</b></h4><b>Location:</b> 5 Me Linh Square, Ben Nghe, Dist 1, HCMC.<br><b>Role:</b> High-priority client requiring secure, direct fulfillment of security devices from SHTP.</div>`)[0];
+                popup_22389b277a1611ed78339291c5bb46c5.setContent(html_3a228dbb62188dc00f933590416a0e91);
+            
+        
+
+        marker_0b46929fa14b1f3583a0022c9ec9802a.bindPopup(popup_22389b277a1611ed78339291c5bb46c5)
+        ;
+
+        
+    
+    
+            marker_0b46929fa14b1f3583a0022c9ec9802a.bindTooltip(
+                `<div>
+                     B2B Customer: Vietcombank Tower
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_0b46929fa14b1f3583a0022c9ec9802a.setIcon(icon_db16952bed5aac918b7e06e5d9aa576e);
+            
+    
+            var marker_5b0ee66f35ffde26b3e2446e27ae1e44 = L.marker(
+                [10.7719, 106.6983],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_5c8b20ca551234309ae8370e6655d1f2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "university",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e43ce50de9cce00660e5992fc86937de = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_4f2d82ef94b8c59f206cb57b4fb43a7c = $(`<div id="html_4f2d82ef94b8c59f206cb57b4fb43a7c" style="width: 100.0%; height: 100.0%;"><h4><b>🏦 B2B Customer: BIDV HCMC Branch</b></h4><b>Location:</b> 134 Nguyen Cong Tru, Dist 1, HCMC.<br><b>Role:</b> Key financial institution for smart payment solutions and technology integration projects.</div>`)[0];
+                popup_e43ce50de9cce00660e5992fc86937de.setContent(html_4f2d82ef94b8c59f206cb57b4fb43a7c);
+            
+        
+
+        marker_5b0ee66f35ffde26b3e2446e27ae1e44.bindPopup(popup_e43ce50de9cce00660e5992fc86937de)
+        ;
+
+        
+    
+    
+            marker_5b0ee66f35ffde26b3e2446e27ae1e44.bindTooltip(
+                `<div>
+                     B2B Customer: BIDV Financial Tower
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5b0ee66f35ffde26b3e2446e27ae1e44.setIcon(icon_5c8b20ca551234309ae8370e6655d1f2);
+            
+    
+            var marker_8d2be020b2e4a90b7a8ab3d441c7e9fd = L.marker(
+                [10.7705, 106.6943],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_23a90d302515183d64395b3a59f856ab = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "university",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_95bd151aebb21b33420021476d902169 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_31ba8efb273aab7f7c361e8f3339e852 = $(`<div id="html_31ba8efb273aab7f7c361e8f3339e852" style="width: 100.0%; height: 100.0%;"><h4><b>🏦 B2B Customer: ACB Bank HQ</b></h4><b>Location:</b> 442 Nguyen Thi Minh Khai, Dist 3, HCMC.<br><b>Role:</b> An important client for corporate card solutions and security devices.</div>`)[0];
+                popup_95bd151aebb21b33420021476d902169.setContent(html_31ba8efb273aab7f7c361e8f3339e852);
+            
+        
+
+        marker_8d2be020b2e4a90b7a8ab3d441c7e9fd.bindPopup(popup_95bd151aebb21b33420021476d902169)
+        ;
+
+        
+    
+    
+            marker_8d2be020b2e4a90b7a8ab3d441c7e9fd.bindTooltip(
+                `<div>
+                     B2B Customer: ACB Bank HQ
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8d2be020b2e4a90b7a8ab3d441c7e9fd.setIcon(icon_23a90d302515183d64395b3a59f856ab);
+            
+    
+            var marker_0dd4696a0f7f5dce7cc4dd80a224fbc8 = L.marker(
+                [16.1189, 108.3182],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_dfd8f83be1bdc307b5540ed9b8d1ac02 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightred",
+  "iconColor": "white",
+  "icon": "building",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1060c5e929bdcf49e5b36c8809dd5182 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6b83afe3751848c4637931d4259dd5e7 = $(`<div id="html_6b83afe3751848c4637931d4259dd5e7" style="width: 100.0%; height: 100.0%;"><h4><b>🎯 B2B Customer: InterContinental Danang Resort</b></h4><b>Location:</b> Son Tra Peninsula, Da Nang.<br><b>Role:</b> A flagship customer in the hospitality sector. Requires specialized logistics to a geographically challenging location.</div>`)[0];
+                popup_1060c5e929bdcf49e5b36c8809dd5182.setContent(html_6b83afe3751848c4637931d4259dd5e7);
+            
+        
+
+        marker_0dd4696a0f7f5dce7cc4dd80a224fbc8.bindPopup(popup_1060c5e929bdcf49e5b36c8809dd5182)
+        ;
+
+        
+    
+    
+            marker_0dd4696a0f7f5dce7cc4dd80a224fbc8.bindTooltip(
+                `<div>
+                     B2B Customer: InterContinental Danang
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_0dd4696a0f7f5dce7cc4dd80a224fbc8.setIcon(icon_dfd8f83be1bdc307b5540ed9b8d1ac02);
+            
+    
+            var marker_e3698c92a46cec750400cc2d09bc1c94 = L.marker(
+                [16.0177, 108.2522],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_4c589c1e13bd83c9b47abe0b492002a5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "project-diagram",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_612e5b673cac96b243dd80f173b6a985 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_8eb658a5de1556c5d6bdb8a116fae00d = $(`<div id="html_8eb658a5de1556c5d6bdb8a116fae00d" style="width: 100.0%; height: 100.0%;"><h4><b>🌐 SI Partner: FPT IS (Danang)</b></h4><b>Location:</b> FPT Complex, Nam Ky Khoi Nghia St, FPT City, Ngu Hanh Son, Da Nang.<br><b>Role:</b> Prime contractor for Smart City & e-Government projects. They integrate SXEC's hardware into large-scale software solutions.</div>`)[0];
+                popup_612e5b673cac96b243dd80f173b6a985.setContent(html_8eb658a5de1556c5d6bdb8a116fae00d);
+            
+        
+
+        marker_e3698c92a46cec750400cc2d09bc1c94.bindPopup(popup_612e5b673cac96b243dd80f173b6a985)
+        ;
+
+        
+    
+    
+            marker_e3698c92a46cec750400cc2d09bc1c94.bindTooltip(
+                `<div>
+                     SI Partner: FPT IS (Danang)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e3698c92a46cec750400cc2d09bc1c94.setIcon(icon_4c589c1e13bd83c9b47abe0b492002a5);
+            
+    
+            var marker_7e11910ed8db858565818ac197e46ce4 = L.marker(
+                [21.0289, 105.7899],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_4966c3812a39c3aead4ffe47f468adc2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "link",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d15c5823e97084673624a5a1a9e95e4a = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_5482d080a25e614eaf2baf2c6e6143c6 = $(`<div id="html_5482d080a25e614eaf2baf2c6e6143c6" style="width: 100.0%; height: 100.0%;"><h4><b>🤝 VAR Partner: Techpro Vietnam</b></h4><b>Location:</b> 82 Duy Tan, Cau Giay, Hanoi.<br><b>Role:</b> Key to the Northern enterprise market via their specialization in Suprema access control solutions.</div>`)[0];
+                popup_d15c5823e97084673624a5a1a9e95e4a.setContent(html_5482d080a25e614eaf2baf2c6e6143c6);
+            
+        
+
+        marker_7e11910ed8db858565818ac197e46ce4.bindPopup(popup_d15c5823e97084673624a5a1a9e95e4a)
+        ;
+
+        
+    
+    
+            marker_7e11910ed8db858565818ac197e46ce4.bindTooltip(
+                `<div>
+                     VAR: Techpro Vietnam (Hanoi)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_7e11910ed8db858565818ac197e46ce4.setIcon(icon_4966c3812a39c3aead4ffe47f468adc2);
+            
+    
+            var marker_a49611c2c9410ae43f5983a335c2b9e8 = L.marker(
+                [21.0822, 105.7487],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_da4ebe8a7c41d827d6c0e03cf3898942 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightblue",
+  "iconColor": "white",
+  "icon": "briefcase",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_242f3c17c2630aea4e5e6d67b996f1f0 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_7a7892c7f53c7cab4bebca5145dcbda0 = $(`<div id="html_7a7892c7f53c7cab4bebca5145dcbda0" style="width: 100.0%; height: 100.0%;"><h4><b>🏢 End-Customer (from VAR)</b></h4><b>Location:</b> Dong Anh, Hanoi.<br><b>Served by:</b> Techpro Vietnam.<br><b>Solution Example:</b> Access control cards for thousands of factory workers.</div>`)[0];
+                popup_242f3c17c2630aea4e5e6d67b996f1f0.setContent(html_7a7892c7f53c7cab4bebca5145dcbda0);
+            
+        
+
+        marker_a49611c2c9410ae43f5983a335c2b9e8.bindPopup(popup_242f3c17c2630aea4e5e6d67b996f1f0)
+        ;
+
+        
+    
+    
+            marker_a49611c2c9410ae43f5983a335c2b9e8.bindTooltip(
+                `<div>
+                     End-Customer: Thang Long Industrial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a49611c2c9410ae43f5983a335c2b9e8.setIcon(icon_da4ebe8a7c41d827d6c0e03cf3898942);
+            
+    
+            var marker_d8bea4005a578511d151c0aa17e43092 = L.marker(
+                [21.0171, 105.7831],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_35f83ec6eec0e1198b2c482f95debc5d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightblue",
+  "iconColor": "white",
+  "icon": "briefcase",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0a722f00039a46b570b2fb59e5eeae0a = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_dafd102af47b0326f8aa9b592db1f6a5 = $(`<div id="html_dafd102af47b0326f8aa9b592db1f6a5" style="width: 100.0%; height: 100.0%;"><h4><b>🏢 End-Customer (from VAR)</b></h4><b>Location:</b> Pham Hung, Nam Tu Liem, Hanoi.<br><b>Served by:</b> Techpro Vietnam.<br><b>Solution Example:</b> Smart ID cards for office employees and integrated security systems.</div>`)[0];
+                popup_0a722f00039a46b570b2fb59e5eeae0a.setContent(html_dafd102af47b0326f8aa9b592db1f6a5);
+            
+        
+
+        marker_d8bea4005a578511d151c0aa17e43092.bindPopup(popup_0a722f00039a46b570b2fb59e5eeae0a)
+        ;
+
+        
+    
+    
+            marker_d8bea4005a578511d151c0aa17e43092.bindTooltip(
+                `<div>
+                     End-Customer: Keangnam Landmark 72
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d8bea4005a578511d151c0aa17e43092.setIcon(icon_35f83ec6eec0e1198b2c482f95debc5d);
+            
+    
+            var marker_3522dbb8730093880382ecf7501566c8 = L.marker(
+                [21.028, 105.8523],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_ab1f15725e33e692bcce4259a9c4f59d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "university",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_55b69a45b951dc7019c37cbf30af2355 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_5ee0b4fc4e88de613dea1e2969c026b9 = $(`<div id="html_5ee0b4fc4e88de613dea1e2969c026b9" style="width: 100.0%; height: 100.0%;"><h4><b>🏦 B2B Customer: Techcombank HQ</b></h4><b>Location:</b> 6 Quang Trung, Hoan Kiem, Ha Noi.<br><b>Role:</b> Pioneering digital bank, requiring innovative tech solutions and a fast, reliable supply chain managed from the Hanoi Hub.</div>`)[0];
+                popup_55b69a45b951dc7019c37cbf30af2355.setContent(html_5ee0b4fc4e88de613dea1e2969c026b9);
+            
+        
+
+        marker_3522dbb8730093880382ecf7501566c8.bindPopup(popup_55b69a45b951dc7019c37cbf30af2355)
+        ;
+
+        
+    
+    
+            marker_3522dbb8730093880382ecf7501566c8.bindTooltip(
+                `<div>
+                     B2B Customer: Techcombank HQ Tower
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3522dbb8730093880382ecf7501566c8.setIcon(icon_ab1f15725e33e692bcce4259a9c4f59d);
+            
+    
+            var marker_669bee38d05cdd8b2e26b3240548a8b9 = L.marker(
+                [21.028, 105.785],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_eca300f032c5b40789b099628a6806c8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "pink",
+  "iconColor": "white",
+  "icon": "signal",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fea314310661b97719ba839c681b6007 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_08c474afd7b7db46ba9db497b10946e5 = $(`<div id="html_08c474afd7b7db46ba9db497b10946e5" style="width: 100.0%; height: 100.0%;"><h4><b>📡 B2B Customer: Viettel Group HQ</b></h4><b>Location:</b> Lot D26, Cau Giay New Urban Area, Hanoi.<br><b>Role:</b> A strategic client for IoT devices and secure SIM solutions.</div>`)[0];
+                popup_fea314310661b97719ba839c681b6007.setContent(html_08c474afd7b7db46ba9db497b10946e5);
+            
+        
+
+        marker_669bee38d05cdd8b2e26b3240548a8b9.bindPopup(popup_fea314310661b97719ba839c681b6007)
+        ;
+
+        
+    
+    
+            marker_669bee38d05cdd8b2e26b3240548a8b9.bindTooltip(
+                `<div>
+                     B2B Customer: Viettel Group HQ
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_669bee38d05cdd8b2e26b3240548a8b9.setIcon(icon_eca300f032c5b40789b099628a6806c8);
+            
+    
+            var marker_2f3f12b96790fb20c4d4d15dc29e1bf4 = L.marker(
+                [21.0229, 105.8427],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_35ce5a9e0061a27597a5656f40132f98 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "landmark",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1b83ef0721acb3aabfca5215adfa5758 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_9338a452055b89868e84278395f1c03d = $(`<div id="html_9338a452055b89868e84278395f1c03d" style="width: 100.0%; height: 100.0%;"><h4><b>⭐ B2G Customer: Ministry of Public Security (MPS)</b></h4><b>Location:</b> 44 Yet Kieu, Hoan Kiem, Hanoi.<br><b>Role:</b> The highest-level client for national ID projects, requiring the most stringent security protocols.</div>`)[0];
+                popup_1b83ef0721acb3aabfca5215adfa5758.setContent(html_9338a452055b89868e84278395f1c03d);
+            
+        
+
+        marker_2f3f12b96790fb20c4d4d15dc29e1bf4.bindPopup(popup_1b83ef0721acb3aabfca5215adfa5758)
+        ;
+
+        
+    
+    
+            marker_2f3f12b96790fb20c4d4d15dc29e1bf4.bindTooltip(
+                `<div>
+                     B2G Customer: Ministry of Public Security
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2f3f12b96790fb20c4d4d15dc29e1bf4.setIcon(icon_35ce5a9e0061a27597a5656f40132f98);
+            
+    
+            var marker_595a3d41b070a6c613836cbb3e5eebb3 = L.marker(
+                [21.0264, 105.854],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            var icon_101409b5989f100fef521411996e9d1f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "landmark",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5ac34e76ba90303556518611312aa71d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_5fafd76934c249073c5663fc0137fb89 = $(`<div id="html_5fafd76934c249073c5663fc0137fb89" style="width: 100.0%; height: 100.0%;"><h4><b>⭐ B2G Customer: Ministry of Industry and Trade (MOIT)</b></h4><b>Location:</b> 23 Ngo Quyen, Hoan Kiem, Hanoi.<br><b>Role:</b> A key government client for solutions related to trade promotion, e-customs, and secure document management.</div>`)[0];
+                popup_5ac34e76ba90303556518611312aa71d.setContent(html_5fafd76934c249073c5663fc0137fb89);
+            
+        
+
+        marker_595a3d41b070a6c613836cbb3e5eebb3.bindPopup(popup_5ac34e76ba90303556518611312aa71d)
+        ;
+
+        
+    
+    
+            marker_595a3d41b070a6c613836cbb3e5eebb3.bindTooltip(
+                `<div>
+                     B2G Customer: Ministry of Industry and Trade
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_595a3d41b070a6c613836cbb3e5eebb3.setIcon(icon_101409b5989f100fef521411996e9d1f);
+            
+    
+            ant_path_08254ac4216210ae171c993737f2cf77 = L.polyline.antPath(
+              [[10.755, 106.7709], [10.8533, 106.7725]],
+              {
+  "stroke": true,
+  "color": "#5A5A5A",
+  "weight": 4,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+10,
+20,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#5A5A5A",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 800,
+  "pulseColor": "#FFFFFF",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_08254ac4216210ae171c993737f2cf77.bindTooltip(
+                `<div>
+                     <b>Inbound Logistics Flow</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_797738f7aa42c180ed15c28705e7b5b0 = L.polyline.antPath(
+              [[10.8533, 106.7725], [12.25, 109.19], [13.77, 109.22], [16.1042, 108.1132], [18.67, 105.68], [21.015, 105.5252]],
+              {
+  "stroke": true,
+  "color": "#003366",
+  "weight": 7,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+20,
+30,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#003366",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 1000,
+  "pulseColor": "#FFFFFF",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_797738f7aa42c180ed15c28705e7b5b0.bindTooltip(
+                `<div>
+                     <b>🚚 Secure FTL Truck (Backbone)</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_83b62f17139df24973e4a10c5a54a8d7 = L.polyline.antPath(
+              [[[10.8188, 106.6575], [21.2185, 105.8043]]],
+              {
+  "stroke": true,
+  "color": "#8A2BE2",
+  "weight": 4,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+10,
+20,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#8A2BE2",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 1000,
+  "pulseColor": "#FFFFFF",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_83b62f17139df24973e4a10c5a54a8d7.bindTooltip(
+                `<div>
+                     <b>✈️ Animated Priority Air Freight Route</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_39e56f2bf3f8dfd6b28e1a62ccae580f = L.polyline.antPath(
+              [[10.8533, 106.7725], [10.84, 106.7], [10.8188, 106.6575]],
+              {
+  "stroke": true,
+  "color": "red",
+  "weight": 3,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+5,
+10,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "red",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 300,
+  "pulseColor": "orange",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_39e56f2bf3f8dfd6b28e1a62ccae580f.bindTooltip(
+                `<div>
+                     <b>🚨 High-Security First Leg</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_2c2c9edd8b261d23aec430f9d3949c92 = L.polyline.antPath(
+              [[[10.8533, 106.7725], [10.8931, 106.7565]], [[10.8533, 106.7725], [10.8, 106.72], [10.7744, 106.7053]], [[10.8533, 106.7725], [10.8, 106.72], [10.7719, 106.6983]], [[10.8533, 106.7725], [10.8, 106.72], [10.7705, 106.6943]]],
+              {
+  "stroke": true,
+  "color": "#d45113",
+  "weight": 4,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+5,
+10,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#d45113",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 400,
+  "pulseColor": "#FFDAB9",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_2c2c9edd8b261d23aec430f9d3949c92.bindTooltip(
+                `<div>
+                     <b>🛵 Southern Direct Fulfillment (Secure Van)</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_7d5dd92c1f8c842eb1d9d9a83ed1b10d = L.polyline.antPath(
+              [[[21.015, 105.5252], [21.025, 105.65], [21.0289, 105.7899]], [[21.015, 105.5252], [21.025, 105.65], [21.028, 105.8523]], [[21.015, 105.5252], [21.025, 105.65], [21.028, 105.785]], [[21.015, 105.5252], [21.025, 105.65], [21.0229, 105.8427]], [[21.015, 105.5252], [21.025, 105.65], [21.0264, 105.854]], [[16.1042, 108.1132], [16.09, 108.23], [16.1213, 108.2612], [16.1189, 108.3182]], [[16.1042, 108.1132], [16.0177, 108.2522]]],
+              {
+  "stroke": true,
+  "color": "#0099cc",
+  "weight": 4,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+5,
+15,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#0099cc",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 500,
+  "pulseColor": "white",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_7d5dd92c1f8c842eb1d9d9a83ed1b10d.bindTooltip(
+                `<div>
+                     <b>🚛 Regional Last-Mile (Secure Van)</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_6cf9bd6b863c038a4433352f538a044b = L.polyline.antPath(
+              [[[21.2185, 105.8043], [21.0229, 105.8427]], [[21.2185, 105.8043], [21.0264, 105.854]]],
+              {
+  "stroke": true,
+  "color": "red",
+  "weight": 3,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+5,
+10,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "red",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 300,
+  "pulseColor": "orange",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_6cf9bd6b863c038a4433352f538a044b.bindTooltip(
+                `<div>
+                     <b>🚨 High-Security Final Leg (Secure Van)</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_1901aa7fd8758a5fa07ca029fd966067 = L.polyline.antPath(
+              [[[10.8931, 106.7565], [10.9328, 106.697]], [[10.8931, 106.7565], [10.7717, 106.7042]], [[21.0289, 105.7899], [21.0822, 105.7487]], [[21.0289, 105.7899], [21.0171, 105.7831]]],
+              {
+  "stroke": true,
+  "color": "#228B22",
+  "weight": 3,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+5,
+5,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#228B22",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 300,
+  "pulseColor": "lightgreen",
+}
+        ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+            ant_path_1901aa7fd8758a5fa07ca029fd966067.bindTooltip(
+                `<div>
+                     <b>📦 VAR to End-Customer Delivery</b>
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_8ce17e48aaaaed21141d6a258c679a54 = L.marker(
+                [14.5, 108.8],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+        var icon_470d78073f60622d34a3d1497f6a0aab = L.icon({
+  "iconUrl": "https://cdn-icons-png.flaticon.com/128/3448/3448530.png",
+  "iconSize": [64, 64],
+});
+        
+    
+            marker_8ce17e48aaaaed21141d6a258c679a54.bindTooltip(
+                `<div>
+                     Secure FTL Truck
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8ce17e48aaaaed21141d6a258c679a54.setIcon(icon_470d78073f60622d34a3d1497f6a0aab);
+            
+    
+            var marker_e9cc17aab52c9815e6df508b10ffffbc = L.marker(
+                [10.82, 106.75],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+        var icon_f2a2f3c3d0608c0b143e5358d8a5e75a = L.icon({
+  "iconUrl": "https://cdn-icons-png.flaticon.com/128/2951/2951996.png",
+  "iconSize": [48, 48],
+});
+        
+    
+            marker_e9cc17aab52c9815e6df508b10ffffbc.bindTooltip(
+                `<div>
+                     Southern Secure Fulfillment Van
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e9cc17aab52c9815e6df508b10ffffbc.setIcon(icon_f2a2f3c3d0608c0b143e5358d8a5e75a);
+            
+    
+            var marker_86033d13aa85600352b25826d4d0c286 = L.marker(
+                [21.0, 105.68],
+                {
+}
+            ).addTo(map_e73f71504dc100426747a2c096e11545);
+        
+    
+        var icon_138b9f75b8f0fb3999c33c2ba553fef6 = L.icon({
+  "iconUrl": "https://cdn-icons-png.flaticon.com/128/2951/2951996.png",
+  "iconSize": [48, 48],
+});
+        
+    
+            marker_86033d13aa85600352b25826d4d0c286.bindTooltip(
+                `<div>
+                     Northern Secure Fulfillment Van
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_86033d13aa85600352b25826d4d0c286.setIcon(icon_138b9f75b8f0fb3999c33c2ba553fef6);
+            
+</script>
+</html>
