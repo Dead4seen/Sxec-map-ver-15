@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="SXEC Distribution Network Interactive Map">
+    <title>SXEC Distribution Network V16 - Interactive Map</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" as="script">
+    
+    <!-- CSS Dependencies - Load async for non-critical -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" media="print" onload="this.media='all'">
+    
+    <!-- Optimized Styles -->
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --background: rgba(255, 255, 255, 0.95);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8fafc;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--background);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            max-width: 380px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            transition: var(--transition);
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .panel-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0 0 12px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Toggle Controls */
+        .toggle-group {
+            display: grid;
+            gap: 8px;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .toggle-item:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+
+        .toggle-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .toggle-icon {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: #475569;
+            flex: 1;
+        }
+
+        /* Legend */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .legend-icon {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Search Box */
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--background);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 16px;
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animation Controls */
+        .animation-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .control-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .control-btn.secondary {
+            background: var(--secondary-color);
+        }
+
+        .control-btn.secondary:hover {
+            background: #475569;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .control-panel {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                max-width: none;
+            }
+
+            .stats-panel {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Custom Popup Styles */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .popup-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            margin: -10px -10px 10px -10px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .popup-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .popup-content {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .popup-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            margin: 4px 4px 0 0;
+        }
+
+        /* Hide elements during loading */
+        .loading .control-panel,
+        .loading .stats-panel {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="loading">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Loading SXEC Distribution Network</h3>
+            <p>Initializing interactive map...</p>
+        </div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <div class="panel-header">
+            <h1 class="panel-title">SXEC Distribution Network</h1>
+            <p class="panel-subtitle">Version 16 - Interactive Controls</p>
+        </div>
+        
+        <div class="panel-content">
+            <!-- Search -->
+            <div class="section">
+                <h3 class="section-title">Search Locations</h3>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search facilities, cities, or routes...">
+                </div>
+            </div>
+
+            <!-- Layer Controls -->
+            <div class="section">
+                <h3 class="section-title">Infrastructure Layers</h3>
+                <div class="toggle-group" id="layerToggles">
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-layer="ports">
+                        <i class="fas fa-ship toggle-icon" style="color:darkblue"></i>
+                        <span class="toggle-label">Inbound Ports</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-layer="factories">
+                        <i class="fas fa-industry toggle-icon" style="color:darkred"></i>
+                        <span class="toggle-label">Manufacturing</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-layer="hubs">
+                        <i class="fas fa-cogs toggle-icon" style="color:blue"></i>
+                        <span class="toggle-label">Hybrid Centers</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-layer="airports">
+                        <i class="fas fa-plane-departure toggle-icon" style="color:cadetblue"></i>
+                        <span class="toggle-label">Airports</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-layer="partners">
+                        <i class="fas fa-link toggle-icon" style="color:green"></i>
+                        <span class="toggle-label">Partners</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-layer="customers">
+                        <i class="fas fa-university toggle-icon" style="color:orange"></i>
+                        <span class="toggle-label">Customers</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Route Controls -->
+            <div class="section">
+                <h3 class="section-title">Transportation Routes</h3>
+                <div class="toggle-group" id="routeToggles">
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-route="backbone">
+                        <div class="legend-color" style="background:#003366"></div>
+                        <span class="toggle-label">Secure FTL Truck</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-route="southern">
+                        <div class="legend-color" style="background:#d45113"></div>
+                        <span class="toggle-label">Southern Direct</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-route="regional">
+                        <div class="legend-color" style="background:#0099cc"></div>
+                        <span class="toggle-label">Regional Hub</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-route="air">
+                        <div class="legend-color" style="background:#8A2BE2; border: 2px dashed #8A2BE2; height: 2px;"></div>
+                        <span class="toggle-label">Air Freight</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-route="security">
+                        <div class="legend-color" style="background:red"></div>
+                        <span class="toggle-label">High-Security</span>
+                    </label>
+                    <label class="toggle-item">
+                        <input type="checkbox" checked data-route="lastmile">
+                        <div class="legend-color" style="background:#228B22"></div>
+                        <span class="toggle-label">Last-Mile</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Animation Controls -->
+            <div class="section">
+                <h3 class="section-title">Animation Controls</h3>
+                <div class="animation-controls">
+                    <button class="control-btn" id="pauseBtn">
+                        <i class="fas fa-pause"></i>
+                        <span>Pause</span>
+                    </button>
+                    <button class="control-btn secondary" id="speedBtn">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Speed: 1x</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Panel -->
+    <div class="stats-panel">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-value" id="facilitiesCount">0</span>
+                <span class="stat-label">Facilities</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="routesCount">0</span>
+                <span class="stat-label">Routes</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="partnersCount">0</span>
+                <span class="stat-label">Partners</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="coverageArea">Vietnam</span>
+                <span class="stat-label">Coverage</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies - Load async -->
+    <script>
+        // Performance optimization: Load scripts asynchronously
+        const scripts = [
+            'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js',
+            'https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.3.0/dist/leaflet-ant-path.min.js',
+            'https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js'
+        ];
+
+        let loadedScripts = 0;
+        const totalScripts = scripts.length;
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => {
+                    loadedScripts++;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Load all scripts in parallel
+        Promise.all(scripts.map(loadScript))
+            .then(() => {
+                // All scripts loaded, initialize map
+                setTimeout(initializeMap, 100);
+            })
+            .catch(error => {
+                console.error('Failed to load scripts:', error);
+                document.getElementById('loadingScreen').innerHTML = 
+                    '<div class="loading-content"><h3>Loading Failed</h3><p>Please refresh the page</p></div>';
+            });
+
+        function initializeMap() {
+            // Map data - optimized structure with complete facility and route data
+            const mapData = {
+                facilities: [
+                    // Ports
+                    {
+                        id: 'cat_lai_port',
+                        type: 'ports',
+                        coords: [10.755, 106.7709],
+                        name: 'Cat Lai Port',
+                        title: '⚓️ Inbound Gateway: Cat Lai Port',
+                        details: 'Main entry point for imported components. The start of the physical value chain, crucial for production timeline.',
+                        location: 'Nguyen Thi Dinh St, Cat Lai Ward, Thu Duc City, HCMC',
+                        icon: 'ship',
+                        color: 'darkblue'
+                    },
+                    
+                    // Factories
+                    {
+                        id: 'manufacturing_plant',
+                        type: 'factories',
+                        coords: [10.8533, 106.7725],
+                        name: 'SXEC National Manufacturing Plant (SHTP)',
+                        title: '🏭 SXEC National Manufacturing Plant',
+                        details: 'Primary R&D, production, QA hub.',
+                        location: 'Saigon Hi-Tech Park, Thu Duc City, HCMC',
+                        esg: 'Rooftop solar panel installation (Phase 1) and rainwater harvesting system to reduce carbon footprint.',
+                        icon: 'industry',
+                        color: 'darkred'
+                    },
+                    
+                    // Hybrid Centers/Hubs
+                    {
+                        id: 'central_hub',
+                        type: 'hubs',
+                        coords: [16.1042, 108.1132],
+                        name: 'SXEC Central Hybrid Center',
+                        title: '💡 SXEC Central Region Hybrid Center',
+                        details: 'Hybrid Center = Logistics Hub + Solutions Showroom. Strategic beachhead to serve Central Vietnam & the Central Highlands.',
+                        location: 'Da Nang Hi-Tech Park (DHTP)',
+                        esg: 'EV charging stations for last-mile fleet, smart energy management system.',
+                        icon: 'cogs',
+                        color: 'blue'
+                    },
+                    {
+                        id: 'northern_hub',
+                        type: 'hubs',
+                        coords: [21.015, 105.5252],
+                        name: 'SXEC Northern Hybrid Center',
+                        title: '💡 SXEC Northern Region Hybrid Center',
+                        details: 'The nerve center for the Northern market. Proximity to government HQs and major corporate HQs.',
+                        location: 'Hoa Lac Hi-Tech Park (HHTP), Hanoi',
+                        esg: 'Waste sorting & recycling program for packaging, dedicated EV charging infrastructure.',
+                        icon: 'cogs',
+                        color: 'blue'
+                    },
+                    
+                    // Airports
+                    {
+                        id: 'tan_son_nhat',
+                        type: 'airports',
+                        coords: [10.8188, 106.6575],
+                        name: 'Tan Son Nhat Airport (SGN)',
+                        title: '✈️ Tan Son Nhat Airport (SGN)',
+                        details: 'Primary international airport for emergency air freight and priority deliveries.',
+                        location: 'Ho Chi Minh City',
+                        icon: 'plane-departure',
+                        color: 'cadetblue'
+                    },
+                    {
+                        id: 'noi_bai',
+                        type: 'airports',
+                        coords: [21.2185, 105.8043],
+                        name: 'Noi Bai Airport (HAN)',
+                        title: '✈️ Noi Bai Airport (HAN)',
+                        details: 'Northern regional airport for air freight services.',
+                        location: 'Hanoi',
+                        icon: 'plane-departure',
+                        color: 'cadetblue'
+                    },
+                    
+                    // Partners - 3PL and VARs
+                    {
+                        id: 'gemadept',
+                        type: 'partners',
+                        coords: [10.7761, 106.7032],
+                        name: '3PL Partner: GEMADEPT',
+                        title: '🚢 3PL Partner: GEMADEPT',
+                        details: 'Strategic 3PL partner for the secure backbone FTL route, providing professional, high-security freight services and real-time tracking capabilities.',
+                        location: '6 Le Thanh Ton, Dist 1, HCMC',
+                        icon: 'project-diagram',
+                        color: 'purple'
+                    },
+                    {
+                        id: 'synnex_fpt',
+                        type: 'partners',
+                        coords: [10.8931, 106.7565],
+                        name: 'VAR: Synnex FPT Distribution Center',
+                        title: '🤝 VAR Partner: Synnex FPT',
+                        details: "Vietnam's largest ICT distributor. A key channel to reach thousands of smaller B2B customers and resellers across the South.",
+                        location: 'Song Than 1 IP, Binh Duong',
+                        icon: 'link',
+                        color: 'green'
+                    },
+                    {
+                        id: 'fpt_is',
+                        type: 'partners',
+                        coords: [21.0289, 105.7899],
+                        name: 'SI Partner: FPT IS',
+                        title: '🔧 System Integrator: FPT IS',
+                        details: 'Leading system integrator for digital transformation projects, specializing in smart city and enterprise solutions.',
+                        location: 'FPT Tower, Cau Giay, Hanoi',
+                        icon: 'project-diagram',
+                        color: 'purple'
+                    },
+                    
+                    // Bank Customers
+                    {
+                        id: 'bidv',
+                        type: 'customers',
+                        coords: [21.0264, 105.854],
+                        name: 'BIDV Headquarters',
+                        title: '🏛️ Customer: BIDV (Bank)',
+                        details: 'Major banking customer requiring comprehensive security solutions for branches nationwide.',
+                        location: '35 Hang Voi, Hoan Kiem, Hanoi',
+                        icon: 'university',
+                        color: 'orange'
+                    },
+                    {
+                        id: 'vietcombank',
+                        type: 'customers',
+                        coords: [10.7717, 106.7142],
+                        name: 'Vietcombank Tower',
+                        title: '🏛️ Customer: Vietcombank (Bank)',
+                        details: 'Leading commercial bank implementing advanced security and surveillance systems.',
+                        location: '198 Tran Quang Khai, Dist 1, HCMC',
+                        icon: 'university',
+                        color: 'orange'
+                    },
+                    
+                    // Government Customers
+                    {
+                        id: 'hanoi_city_hall',
+                        type: 'customers',
+                        coords: [21.0229, 105.8427],
+                        name: 'Hanoi City Hall',
+                        title: '🏛️ Customer: Hanoi People\'s Committee',
+                        details: 'Government customer for smart city initiatives and public security systems.',
+                        location: 'Dinh Tien Hoang, Hoan Kiem, Hanoi',
+                        icon: 'landmark',
+                        color: 'black'
+                    },
+                    {
+                        id: 'hcmc_city_hall',
+                        type: 'customers',
+                        coords: [10.7756, 106.7019],
+                        name: 'HCMC City Hall',
+                        title: '🏛️ Customer: HCMC People\'s Committee',
+                        details: 'Municipal government implementing comprehensive urban monitoring and security solutions.',
+                        location: '86 Le Thanh Ton, Ben Nghe, Dist 1, HCMC',
+                        icon: 'landmark',
+                        color: 'black'
+                    },
+                    
+                    // End Customers
+                    {
+                        id: 'vsip1',
+                        type: 'customers',
+                        coords: [10.9328, 106.697],
+                        name: 'End-Customer: VSIP 1 Industrial Park',
+                        title: '🏢 End-Customer (from VAR)',
+                        details: 'Large industrial complex requiring integrated security solutions for multiple facilities.',
+                        location: 'Vietnam Singapore Industrial Park 1, Binh Duong',
+                        icon: 'briefcase',
+                        color: 'lightblue'
+                    },
+                    {
+                        id: 'bitexco',
+                        type: 'customers',
+                        coords: [10.7717, 106.7042],
+                        name: 'End-Customer: Bitexco Financial Tower',
+                        title: '🏢 End-Customer (from VAR)',
+                        details: 'Premium commercial tower with advanced security and access control requirements.',
+                        location: '2 Hai Trieu, Ben Nghe, Dist 1, HCMC',
+                        icon: 'briefcase',
+                        color: 'lightblue'
+                    },
+                    {
+                        id: 'fpt_hanoi_customer',
+                        type: 'customers',
+                        coords: [21.0822, 105.7487],
+                        name: 'Enterprise Customer',
+                        title: '🏢 End-Customer (from SI)',
+                        details: 'Large enterprise customer served through system integrator partnerships.',
+                        location: 'Hanoi Business District',
+                        icon: 'briefcase',
+                        color: 'lightblue'
+                    },
+                    {
+                        id: 'hcmc_enterprise',
+                        type: 'customers',
+                        coords: [21.0171, 105.7831],
+                        name: 'Corporate Customer',
+                        title: '🏢 End-Customer (from SI)',
+                        details: 'Corporate customer requiring comprehensive security infrastructure.',
+                        location: 'Hanoi Central Business District',
+                        icon: 'briefcase',
+                        color: 'lightblue'
+                    }
+                ],
+                routes: [
+                    {
+                        id: 'backbone_route',
+                        type: 'backbone',
+                        path: [[10.755, 106.7709], [10.8533, 106.7725], [16.1042, 108.1132], [21.015, 105.5252]],
+                        name: 'Secure FTL Truck (Backbone)',
+                        color: '#003366',
+                        weight: 6,
+                        animated: true,
+                        delay: 800,
+                        description: 'Main distribution backbone connecting major facilities'
+                    },
+                    {
+                        id: 'southern_direct',
+                        type: 'southern',
+                        path: [[10.8533, 106.7725], [10.8931, 106.7565]],
+                        name: 'Southern Direct Route',
+                        color: '#d45113',
+                        weight: 4,
+                        animated: true,
+                        delay: 600,
+                        description: 'Direct route from manufacturing to southern distributors'
+                    },
+                    {
+                        id: 'regional_hub_north',
+                        type: 'regional',
+                        path: [[21.015, 105.5252], [21.0289, 105.7899]],
+                        name: 'Northern Regional Hub Route',
+                        color: '#0099cc',
+                        weight: 4,
+                        animated: true,
+                        delay: 500,
+                        description: 'Regional distribution from northern hub'
+                    },
+                    {
+                        id: 'regional_hub_central',
+                        type: 'regional',
+                        path: [[16.1042, 108.1132], [16.0544, 108.2022]],
+                        name: 'Central Regional Hub Route',
+                        color: '#0099cc',
+                        weight: 4,
+                        animated: true,
+                        delay: 500,
+                        description: 'Regional distribution from central hub'
+                    },
+                    {
+                        id: 'air_freight_priority',
+                        type: 'air',
+                        path: [[10.8188, 106.6575], [21.2185, 105.8043]],
+                        name: 'Priority Air Freight',
+                        color: '#8A2BE2',
+                        weight: 3,
+                        animated: false,
+                        dashArray: [10, 5],
+                        description: 'Emergency air freight for urgent deliveries'
+                    },
+                    {
+                        id: 'high_security_route',
+                        type: 'security',
+                        path: [[21.2185, 105.8043], [21.0229, 105.8427], [21.2185, 105.8043], [21.0264, 105.854]],
+                        name: 'High-Security Ground Route',
+                        color: 'red',
+                        weight: 3,
+                        animated: true,
+                        delay: 300,
+                        description: 'High-security transport for sensitive deliveries'
+                    },
+                    {
+                        id: 'var_to_customer',
+                        type: 'lastmile',
+                        path: [[10.8931, 106.7565], [10.9328, 106.697], [10.8931, 106.7565], [10.7717, 106.7042], [21.0289, 105.7899], [21.0822, 105.7487], [21.0289, 105.7899], [21.0171, 105.7831]],
+                        name: 'VAR to End-Customer Delivery',
+                        color: '#228B22',
+                        weight: 3,
+                        animated: true,
+                        delay: 300,
+                        description: 'Last-mile delivery from partners to end customers'
+                    }
+                ]
+            };
+
+            // Initialize map
+            const map = L.map('map', {
+                center: [16.0544, 108.2022],
+                zoom: 6,
+                zoomControl: true,
+                preferCanvas: true // Better performance for animations
+            });
+
+            // Add tile layer
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: 'SXEC Distribution Network - V16',
+                subdomains: 'abcd',
+                detectRetina: true,
+                maxZoom: 18
+            }).addTo(map);
+
+            // Layer groups for better management
+            const layerGroups = {
+                ports: L.layerGroup().addTo(map),
+                factories: L.layerGroup().addTo(map),
+                hubs: L.layerGroup().addTo(map),
+                airports: L.layerGroup().addTo(map),
+                partners: L.layerGroup().addTo(map),
+                customers: L.layerGroup().addTo(map)
+            };
+
+            const routeGroups = {
+                backbone: L.layerGroup().addTo(map),
+                southern: L.layerGroup().addTo(map),
+                regional: L.layerGroup().addTo(map),
+                air: L.layerGroup().addTo(map),
+                security: L.layerGroup().addTo(map),
+                lastmile: L.layerGroup().addTo(map)
+            };
+
+            // Add facilities
+            mapData.facilities.forEach(facility => {
+                const icon = L.AwesomeMarkers.icon({
+                    markerColor: facility.color,
+                    iconColor: 'white',
+                    icon: facility.icon,
+                    prefix: 'fa'
+                });
+
+                const marker = L.marker(facility.coords, { icon })
+                    .bindPopup(createPopupContent(facility))
+                    .bindTooltip(facility.name, { sticky: true });
+
+                if (layerGroups[facility.type]) {
+                    layerGroups[facility.type].addLayer(marker);
+                }
+            });
+
+            // Add routes with animations
+            mapData.routes.forEach(route => {
+                if (route.animated && window.L.polyline.antPath) {
+                    const antPath = L.polyline.antPath(route.path, {
+                        color: route.color,
+                        weight: route.weight,
+                        opacity: 0.8,
+                        delay: route.delay,
+                        dashArray: route.dashArray || [10, 20], // Use dashArray from route data
+                        pulseColor: 'white'
+                    }).bindTooltip(route.name, { sticky: true });
+
+                    if (routeGroups[route.type]) {
+                        routeGroups[route.type].addLayer(antPath);
+                    }
+                } else {
+                    const polyline = L.polyline(route.path, {
+                        color: route.color,
+                        weight: route.weight,
+                        opacity: 0.8,
+                        dashArray: route.dashArray
+                    }).bindTooltip(route.name, { sticky: true });
+
+                    if (routeGroups[route.type]) {
+                        routeGroups[route.type].addLayer(polyline);
+                    }
+                }
+            });
+
+            // Interactive controls
+            setupControls(map, layerGroups, routeGroups, mapData);
+
+            // Add clustering for better performance with many markers
+            if (window.L.markerClusterGroup) {
+                setupClustering(map, layerGroups);
+            }
+
+            // Update stats
+            updateStats(mapData);
+
+            // Performance monitoring
+            const loadEndTime = performance.now();
+            console.log(`Map loaded in ${(loadEndTime - performance.now()).toFixed(2)}ms`);
+
+            // Hide loading screen
+            setTimeout(() => {
+                document.body.classList.remove('loading');
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 500);
+        }
+
+        function setupClustering(map, layerGroups) {
+            // Add marker clustering for better performance
+            Object.keys(layerGroups).forEach(layerType => {
+                const clusterGroup = L.markerClusterGroup({
+                    maxClusterRadius: 80,
+                    showCoverageOnHover: false,
+                    zoomToBoundsOnClick: true,
+                    spiderfyOnMaxZoom: false,
+                    removeOutsideVisibleBounds: true,
+                    animate: true
+                });
+                
+                layerGroups[layerType].eachLayer(layer => {
+                    clusterGroup.addLayer(layer);
+                });
+                
+                layerGroups[layerType] = clusterGroup;
+                map.addLayer(clusterGroup);
+            });
+        }
+
+        function createPopupContent(facility) {
+            let content = `
+                <div class="popup-header">
+                    <h4 class="popup-title">${facility.title}</h4>
+                </div>
+                <div class="popup-content">
+                    <p><strong>Location:</strong> ${facility.location}</p>
+                    <p><strong>Function:</strong> ${facility.details}</p>
+            `;
+
+            if (facility.esg) {
+                content += `<p><strong>ESG Initiative:</strong> ${facility.esg}</p>`;
+            }
+
+            content += `
+                    <div style="margin-top: 12px;">
+                        <span class="popup-badge">Infrastructure</span>
+                        <span class="popup-badge">${facility.type.charAt(0).toUpperCase() + facility.type.slice(1)}</span>
+                    </div>
+                </div>
+            `;
+
+            return content;
+        }
+
+        function setupControls(map, layerGroups, routeGroups, mapData) {
+            // Layer toggles
+            document.getElementById('layerToggles').addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    const layer = e.target.dataset.layer;
+                    if (layerGroups[layer]) {
+                        if (e.target.checked) {
+                            map.addLayer(layerGroups[layer]);
+                        } else {
+                            map.removeLayer(layerGroups[layer]);
+                        }
+                    }
+                }
+            });
+
+            // Route toggles
+            document.getElementById('routeToggles').addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    const route = e.target.dataset.route;
+                    if (routeGroups[route]) {
+                        if (e.target.checked) {
+                            map.addLayer(routeGroups[route]);
+                        } else {
+                            map.removeLayer(routeGroups[route]);
+                        }
+                    }
+                }
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm.length > 2) {
+                    const facility = mapData.facilities.find(f => 
+                        f.name.toLowerCase().includes(searchTerm) ||
+                        f.location.toLowerCase().includes(searchTerm)
+                    );
+                    
+                    if (facility) {
+                        map.setView(facility.coords, 12);
+                        // Highlight the facility
+                        highlightFacility(facility.coords);
+                    }
+                }
+            });
+
+            // Animation controls
+            let animationSpeed = 1;
+            let animationPaused = false;
+
+            document.getElementById('pauseBtn').addEventListener('click', (e) => {
+                animationPaused = !animationPaused;
+                const btn = e.target.closest('button');
+                const icon = btn.querySelector('i');
+                const text = btn.querySelector('span');
+                
+                if (animationPaused) {
+                    icon.className = 'fas fa-play';
+                    text.textContent = 'Play';
+                } else {
+                    icon.className = 'fas fa-pause';
+                    text.textContent = 'Pause';
+                }
+            });
+
+            document.getElementById('speedBtn').addEventListener('click', (e) => {
+                animationSpeed = animationSpeed >= 3 ? 0.5 : animationSpeed + 0.5;
+                e.target.closest('button').querySelector('span').textContent = `Speed: ${animationSpeed}x`;
+            });
+        }
+
+        function highlightFacility(coords) {
+            const highlight = L.circleMarker(coords, {
+                radius: 20,
+                fillColor: '#ff7800',
+                color: '#ff7800',
+                weight: 2,
+                opacity: 0.8,
+                fillOpacity: 0.3
+            }).addTo(map);
+
+            setTimeout(() => {
+                map.removeLayer(highlight);
+            }, 3000);
+        }
+
+        function updateStats(mapData) {
+            document.getElementById('facilitiesCount').textContent = mapData.facilities.length;
+            document.getElementById('routesCount').textContent = mapData.routes.length;
+            document.getElementById('partnersCount').textContent = 
+                mapData.facilities.filter(f => f.type === 'partners').length;
+        }
+    </script>
+</body>
+</html>
