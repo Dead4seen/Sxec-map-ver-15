@@ -3,10 +3,10 @@
 <head>
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script defer src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
@@ -50,7 +50,7 @@
             </script>
 
         
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.1.2/dist/leaflet-ant-path.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.1.2/dist/leaflet-ant-path.min.js"></script>
 </head>
 <body>
     
@@ -75,6 +75,7 @@
      <span style="border-bottom: 3px dashed #8A2BE2;display:inline-block;width:20px;vertical-align:middle;"></span> Priority Air Freight<br>
      <span style="border-bottom: 3px solid red;display:inline-block;width:20px;vertical-align:middle;"></span> <b>Animated:</b> High-Security Ground Route<br>
      <span style="border-bottom: 3px solid #228B22;display:inline-block;width:20px;vertical-align:middle;"></span> <b>Animated:</b> VAR to End-Customer<br>
+     <button id="toggleRoutes" class="btn btn-sm btn-outline-secondary mt-2">Hide Logistics Routes</button>
      </div>
      
     
@@ -1575,5 +1576,30 @@
     
                 marker_86033d13aa85600352b25826d4d0c286.setIcon(icon_138b9f75b8f0fb3999c33c2ba553fef6);
             
+
+// ==== Interactivity Enhancements ====
+(function(){
+    const map = typeof map_e73f71504dc100426747a2c096e11545 !== 'undefined' ? map_e73f71504dc100426747a2c096e11545 : null;
+    if(!map) return;
+    // Collect all ant_path polylines dynamically
+    const routeKeys = Object.keys(window).filter(k=>k.startsWith('ant_path_'));
+    const routes = routeKeys.map(k=>window[k]);
+    let routesVisible = true;
+    const btn = document.getElementById('toggleRoutes');
+    if(btn){
+        btn.addEventListener('click', ()=>{
+            routesVisible = !routesVisible;
+            routes.forEach(r => {
+                if(routesVisible){
+                    if(!map.hasLayer(r)) map.addLayer(r);
+                }else{
+                    if(map.hasLayer(r)) map.removeLayer(r);
+                }
+            });
+            btn.textContent = routesVisible ? 'Hide Logistics Routes' : 'Show Logistics Routes';
+        });
+    }
+})();
+// ==== End Enhancements ====
 </script>
 </html>
