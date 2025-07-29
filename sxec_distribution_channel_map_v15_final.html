@@ -51,6 +51,9 @@
 
         
     <script src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.1.2/dist/leaflet-ant-path.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
 </head>
 <body>
     
@@ -122,37 +125,32 @@
             tile_layer_b4f978b6108ea602b124d22c043271c7.addTo(map_e73f71504dc100426747a2c096e11545);
         
     
-            var marker_6f937fc157239ca2dd43eeb0dd4f943b = L.marker(
-                [10.755, 106.7709],
-                {
-}
-            ).addTo(map_e73f71504dc100426747a2c096e11545);
+            // Load marker and route data dynamically
+            fetch('markers_and_routes.json')
+              .then(response => response.json())
+              .then(data => {
+                // Marker clustering group
+                var markerCluster = L.markerClusterGroup();
+                data.markers.forEach(function(m) {
+                  var icon = L.AwesomeMarkers.icon(m.icon);
+                  var marker = L.marker(m.latlng, {icon: icon});
+                  if (m.popup) marker.bindPopup(m.popup);
+                  if (m.tooltip) marker.bindTooltip(m.tooltip, {sticky: true});
+                  markerCluster.addLayer(marker);
+                });
+                map_e73f71504dc100426747a2c096e11545.addLayer(markerCluster);
+
+                // Add routes
+                data.routes.forEach(function(r) {
+                  var poly = L.polyline.antPath(r.path, r.options);
+                  if (r.tooltip) poly.bindTooltip(r.tooltip, {sticky: true});
+                  poly.addTo(map_e73f71504dc100426747a2c096e11545);
+                });
+              });
         
     
-            var icon_937dea19b31e24b03d0f59f87831d8cf = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "darkblue",
-  "iconColor": "white",
-  "icon": "ship",
-  "prefix": "fa",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_88815ad28e6532285cd0081c90d4200d = L.popup({
-  "maxWidth": 450,
-});
-
-        
-            
-                var html_bab12d5cbfecb300c23c00797d220ce5 = $(`<div id="html_bab12d5cbfecb300c23c00797d220ce5" style="width: 100.0%; height: 100.0%;"><h4><b>⚓️ Inbound Gateway: Cat Lai Port</b></h4><b>Location:</b> Nguyen Thi Dinh St, Cat Lai Ward, Thu Duc City, HCMC.<br><b>Role:</b> Main entry point for imported components. The start of the physical value chain, crucial for production timeline.</div>`)[0];
-                popup_88815ad28e6532285cd0081c90d4200d.setContent(html_bab12d5cbfecb300c23c00797d220ce5);
-            
-        
-
-        marker_6f937fc157239ca2dd43eeb0dd4f943b.bindPopup(popup_88815ad28e6532285cd0081c90d4200d)
-        ;
+                marker_6f937fc157239ca2dd43eeb0dd4f943b.bindPopup(popup_88815ad28e6532285cd0081c90d4200d)
+                ;
 
         
     

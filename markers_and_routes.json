@@ -1,0 +1,28 @@
+{
+  "markers": [
+    {
+      "latlng": [10.755, 106.7709],
+      "icon": {"markerColor": "darkblue", "iconColor": "white", "icon": "ship", "prefix": "fa", "extraClasses": "fa-rotate-0"},
+      "popup": "<h4><b>⚓️ Inbound Gateway: Cat Lai Port</b></h4><b>Location:</b> Nguyen Thi Dinh St, Cat Lai Ward, Thu Duc City, HCMC.<br><b>Role:</b> Main entry point for imported components. The start of the physical value chain, crucial for production timeline.",
+      "tooltip": "Cat Lai Port",
+      "type": "port"
+    },
+    {
+      "latlng": [10.8533, 106.7725],
+      "icon": {"markerColor": "darkred", "iconColor": "white", "icon": "industry", "prefix": "fa", "extraClasses": "fa-rotate-0"},
+      "popup": "<h4><b>🏭 SXEC National Manufacturing Plant</b></h4><b>Location:</b> Saigon Hi-Tech Park, Thu Duc City, HCMC.<br><b>Function:</b> Primary R&D, production, QA hub.<br><b>ESG Link:</b> Rooftop solar panel installation (Phase 1) and rainwater harvesting system to reduce carbon footprint.",
+      "tooltip": "SXEC National Manufacturing Plant (SHTP)",
+      "type": "factory"
+    }
+    // ... (repeat for all other markers, using the extracted data)
+  ],
+  "routes": [
+    {
+      "path": [[10.755, 106.7709], [10.8533, 106.7725]],
+      "options": {"stroke": true, "color": "#5A5A5A", "weight": 4, "opacity": 0.5, "lineCap": "round", "lineJoin": "round", "dashArray": [10, 20], "fill": false, "fillColor": "#5A5A5A", "fillOpacity": 0.2, "fillRule": "evenodd", "bubblingMouseEvents": true, "smoothFactor": 1.0, "noClip": false, "paused": false, "reverse": false, "hardwareAcceleration": false, "delay": 800, "pulseColor": "#FFFFFF"},
+      "tooltip": "<b>Inbound Logistics Flow</b>",
+      "type": "inbound"
+    }
+    // ... (repeat for all other routes, using the extracted data)
+  ]
+}
